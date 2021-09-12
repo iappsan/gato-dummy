@@ -174,7 +174,7 @@ def main():
                 GAMESTATE = 3
 
         while GAMESTATE == 3:       # Quieres jugar de nuevo?
-            AGAINSTR = WINNERSTR + AGAINSTR;
+            AGAINSTR = WINNERSTR + AGAINSTR
             CONN.send(str.encode(AGAINSTR))
             ng_data = int(CONN.recv(BUFFERSIZE).decode('UTF-8'))
 
@@ -182,6 +182,7 @@ def main():
                 GAMESTATE = 1
             elif ng_data == 2:
                 GAMESTATE == 0
+    CONN.close();
 
 if __name__ == '__main__':
     main()

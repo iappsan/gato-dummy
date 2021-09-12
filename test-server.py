@@ -3,7 +3,8 @@ import socket
 HOST = "192.168.1.107"
 PORT = 5432
 mi_socket = socket.socket()
-mi_socket.connect((HOST, PORT))
+mi_socket.bind((HOST, PORT))
+mi_socket.listen(5)
 
 while True:
     conexion, addr = mi_socket.accept()

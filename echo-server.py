@@ -56,6 +56,15 @@ def pcThrow():                          # Genera un tiro aleatorio
         randStr = str(randrange(1,size)) + str(randrange(1,size))
         ready = validPos(randStr, 'o')
 
+def tableToStr():                       # Convierte el tablero a cadena
+    genStr = '\n'
+    for i in range(len(GAMETABLE)):
+        for j in range(len(GAMETABLE[i])):
+            genStr = genStr + str(GAMETABLE[i][j]) +' '
+        genStr = genStr + '\n'
+
+    return str.encode(genStr)
+
 def gameFinished(char2check):           # Se verifican las lineas
     size = 0
     i = 1

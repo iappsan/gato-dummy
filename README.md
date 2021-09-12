@@ -1,7 +1,6 @@
 # gato-dummy
 Practica 1 - ACR
-
-Juego de gato dumy
+Juego de gato dumy hecho con python
 
 ## R = NúmeroDeDías%3
 

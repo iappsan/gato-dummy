@@ -3,7 +3,7 @@ import socket
 HOST = "192.168.1.114"  # El hostname o IP del servidor
 PORT = 54321  # El puerto usado por el servidor
 
-msgFromClient = "Hello UDP Server"
+msgFromClient = "Quiero jugar"
 bytesToSend = str.encode(msgFromClient)
 serverAddressPort = (HOST, PORT)
 bufferSize = 1024

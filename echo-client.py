@@ -1,27 +1,20 @@
 import socket
 
-HOST = "192.168.1.114"  # El hostname o IP del servidor
-PORT = 54321  # El puerto usado por el servidor
+HOST = "192.168.1.107"
+PORT = 5432
+BUFFERSIZE = 1024
+mi_socket = socket.socket()
+mi_socket.connect((HOST, PORT))
 
-msgFromClient = "Quiero jugar"
-bytesToSend = str.encode(msgFromClient)
-serverAddressPort = (HOST, PORT)
-bufferSize = 1024
+def main():
 
-# Crea un socket UDP del lado del cliente
-
-with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as UDPClientSocket:
-    # Enviando mensaje al servidor usando el socket UDP
-    UDPClientSocket.sendto(bytesToSend, serverAddressPort)
-    msgFromServer = UDPClientSocket.recvfrom(bufferSize)
-    print(msgFromServer[0])
-
-    #inicia el juego
-    msgFromServer = UDPClientSocket.recvfrom(bufferSize)
-    print(msgFromServer[0])
     while True:
+        respuesta = mi_socket.recv(BUFFERSIZE).decode('UTF-8')
+        print (respuesta)
         inputStr = input()
-        bytesToSend = str.encode(inputStr)
-        UDPClientSocket.sendto(bytesToSend, serverAddressPort)
-        msgFromServer = UDPClientSocket.recvfrom(bufferSize)
-        print(msgFromServer[0])
+        mi_socket.send(str.encode(inputStr))
+
+    mi_socket,close()
+
+if __name__ == '__main__':
+    main()

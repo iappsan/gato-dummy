@@ -6,8 +6,10 @@ BUFFERSIZE = 1024
 mi_socket = socket.socket()
 mi_socket.connect((HOST, PORT))
 
-mi_socket.send(str.encode("Hola esta es una prueba"))
-respuesta = mi_socket.recv(BUFFERSIZE).decode('UTF-8')
+while True:
+    inputStr = input()
+    mi_socket.send(str.encode(inputStr))
+    respuesta = mi_socket.recv(BUFFERSIZE).decode('UTF-8')
+    print (respuesta)
 
-print (respuesta)
 mi_socket.close()

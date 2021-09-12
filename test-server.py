@@ -11,5 +11,5 @@ while True:
     print ("Nueva conexion!")
     print (addr)
 
-    conexion.send("Hola desde del server")
+    conexion.send(str.encode("Hola desde del server"))
     conexion.close()

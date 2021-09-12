@@ -2,9 +2,11 @@ import socket
 from random import randrange
 
 HOST = "192.168.1.107"      # El hostname o IP del servidor
-PORT = 54321                # El puerto que usa el servidor
-bufferSize = 1024           # Tamano del buffer
-
+PORT = 5432                 # El puerto que usa el servidor
+BUFFERSIZE = 1024           # Tamano del buffer
+MYSOCKET = socket.socket()  # Iniciamos el socket
+MYSOCKET.bind((HOST, PORT)) # Lo ligamos al host y al puerto
+MYSOCKET.listen(5)          # Definimos el numero de conecciones a escuchar
 GAMESTATE = 0               # Estado actual del juego
 GAMEDIFFICULT = 0           # Dificultad del juego
 TABLES = [[                 # Tableros
@@ -113,32 +115,28 @@ def gameFinished(char2check):           # Se verifican las lineas
     else:
         return False
 
-with  socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as UDPServerSocket:
-    UDPServerSocket.bind((HOST, PORT))
-    print("Servidor UDP activo, esperando peticiones")
+def main():
+    CONN, ADDR = MYSOCKET.accept()      # En espera de cliente
+    print ("Nueva conexion!")
+    print (ADDR)
 
-    # Listen for incoming datagrams
-    msgFromServer = "Bienvenido al Gato Dummy :)"
-    stateStr = ""
-    winnerStr = ""
-    againStr = ""
+    STATESTR = ""                       # Se inicializan valores para el juego
+    WINNERSTR = ""
+    AGAINSTR = ""
     THROWCOUNTER = 0
-    bytesToSend = str.encode(msgFromServer)
+    
+    while (GAMESTATE == 0):             # Bienvenida al gato dummy
 
-    while (GAMESTATE == 0):         # En espera de cliente
-        data,address = UDPServerSocket.recvfrom(bufferSize)
-        UDPServerSocket.sendto(bytesToSend, address)
-        stateStr = "Escribe la cordenada de tu siguiente tiro"
-        againStr = "Juegas de nuevo?\n(1)Si\n(2)No"
+        STATESTR = "Escribe la cordenada de tu siguiente tiro"
+        AGAINSTR = "Juegas de nuevo?\n(1)Si\n(2)No"
         THROWCOUNTER = 0
         GAMESTATE = 1
 
         while GAMESTATE == 1:       # Preguntando por dificultad
-            UDPServerSocket.sendto(str.encode("Elige dificultad\n(1) Normal\n(2) Avanzado"), address)
-            gd_data,address = UDPServerSocket.recvfrom(bufferSize)
-
-            gd_data = gd_data.decode('UTF-8')
-            print("recivido: "+gd_data+"tipo: "+str(type(gd_data)))
+            CONN.send(str.encode("Bienvenido al Gato Dummy :)\n"
+                            +"Elige dificultad\n(1) Normal\n(2) Avanzado"))
+            gd_data = int(CONN.recv(BUFFERSIZE).decode('UTF-8'))
+            print("Dificultad elegida: "+ str(gd_data))
 
             if gd_data == 1:
                 GAMEDIFFICULT = 1
@@ -155,31 +153,35 @@ with  socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as UDPServerSocket:
         
         while GAMESTATE == 2:       # Desarrollo del juego
             if THROWCOUNTER > 0:
-                UDPServerSocket.sendto(str.encode(stateStr), address)
-                gt_data,address = UDPServerSocket.recvfrom(bufferSize)
+                CONN.send(str.encode(STATESTR))
+                gt_data = CONN.recv(BUFFERSIZE).decode('UTF-8')
+
                 if validPos(gt_data, 'x'):
-                    stateStr = "Escribe la cordenada de tu siguiente tiro"
+                    STATESTR = "Escribe la cordenada de tu siguiente tiro"
                     if gameFinished('x'):
-                        winnerStr = "Has ganado!\n"
+                        WINNERSTR = "Has ganado!\n"
                         GAMESTATE = 3
                     else:
                         THROWCOUNTER -= 1
                         pcThrow()
                         if gameFinished('o'):
-                            winnerStr = "Te han ganado!\n"
+                            WINNERSTR = "Te han ganado!\n"
                             GAMESTATE = 3
                 else:
-                    stateStr = "No puedes tirar ahi\nElige un nuevo lugar"
+                    STATESTR = "No puedes tirar ahi\nElige un nuevo lugar"
             else:
-                winnerStr = "Empate! Ya no quedan mas tiros\n"
+                WINNERSTR = "Empate! Ya no quedan mas tiros\n"
                 GAMESTATE = 3
 
         while GAMESTATE == 3:       # Quieres jugar de nuevo?
-            againStr = winnerStr + againStr;
-            UDPServerSocket.sendto(str.encode(againStr), address)
-            ng_data,address = UDPServerSocket.recvfrom(bufferSize)
+            AGAINSTR = WINNERSTR + AGAINSTR;
+            CONN.send(str.encode(AGAINSTR))
+            ng_data = int(CONN.recv(BUFFERSIZE).decode('UTF-8'))
 
             if ng_data == 1:
                 GAMESTATE = 1
             elif ng_data == 2:
                 GAMESTATE == 0
+
+if __name__ == '__main__':
+    main()

@@ -137,6 +137,9 @@ with  socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as UDPServerSocket:
             UDPServerSocket.sendto(str.encode("Elige dificultad\n(1) Normal\n(2) Avanzado"), address)
             gd_data,address = UDPServerSocket.recvfrom(bufferSize)
 
+            gd_data = gd_data.decode('UTF-8')
+            print("recivido: "+gd_data+"tipo: "+str(type(gd_data)))
+
             if gd_data == 1:
                 GAMEDIFFICULT = 1
                 GAMESTATE = 2
@@ -147,6 +150,8 @@ with  socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as UDPServerSocket:
                 GAMESTATE = 2
                 THROWCOUNTER = 13
                 GAMETABLE = TABLES[1]
+            else:
+                gd_data = ""
         
         while GAMESTATE == 2:       # Desarrollo del juego
             if THROWCOUNTER > 0:

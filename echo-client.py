@@ -15,6 +15,10 @@ with socket.socket(socket.AF_INET,socket.SOCK_DGRAM) as UDPClientSocket:
     UDPClientSocket.sendto(bytesToSend, serverAddressPort)
     msgFromServer = UDPClientSocket.recvfrom(bufferSize)
     print(msgFromServer[0])
+
+    #inicia el juego
+    msgFromServer = UDPClientSocket.recvfrom(bufferSize)
+    print(msgFromServer[0])
     while True:
         inputStr = input()
         bytesToSend = str.encode(inputStr)

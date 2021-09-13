@@ -3,18 +3,22 @@ import socket
 HOST = "192.168.1.107"
 PORT = 5432
 BUFFERSIZE = 1024
-mi_socket = socket.socket()
-mi_socket.connect((HOST, PORT))
+MYSOCKET = socket.socket()
 
 def main():
+    print("Introduce la direccion IP del servidor")
+    HOST = input()
+    print("Introduce el puerto del servidor")
+    PORT = input()
+    MYSOCKET.connect((HOST, PORT))
 
     while True:
-        respuesta = mi_socket.recv(BUFFERSIZE).decode('UTF-8')
-        print (respuesta)
+        RESPONSE = MYSOCKET.recv(BUFFERSIZE).decode('UTF-8')
+        print (RESPONSE)
         inputStr = input()
-        mi_socket.send(str.encode(inputStr))
+        MYSOCKET.send(str.encode(inputStr))
 
-    mi_socket,close()
+    MYSOCKET,close()
 
 if __name__ == '__main__':
     main()

@@ -9,7 +9,7 @@ def main():
     print("Introduce la direccion IP del servidor")
     HOST = input()
     print("Introduce el puerto del servidor")
-    PORT = input()
+    PORT = int(input())
     MYSOCKET.connect((HOST, PORT))
 
     while True:

@@ -196,7 +196,7 @@ while (GAMESTATE == 0):             # Bienvenida al gato dummy
 
     while GAMESTATE == 3:       # Quieres jugar de nuevo?
         ENDTIME = time.time()
-        AGAINSTR = WINNERSTR + "La partida ha durado " + str(ENDTIME-INITIME) + " segundos" + AGAINSTR
+        AGAINSTR = WINNERSTR + "La partida ha durado " + str(ENDTIME-INITIME) + " segundos\n" + AGAINSTR
         CONN.send(str.encode(AGAINSTR))
         ng_data = int(CONN.recv(BUFFERSIZE).decode('UTF-8'))
 

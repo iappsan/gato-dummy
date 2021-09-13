@@ -1,5 +1,6 @@
 import socket
 from random import randrange
+import time
 
 HOST = "192.168.1.107"      # El hostname o IP del servidor
 PORT = 5432                 # El puerto que usa el servidor
@@ -135,6 +136,7 @@ def gameFinished(char2check):           # Se verifican las lineas
 
 print("En espera ... ")
 CONN, ADDR = MYSOCKET.accept()      # En espera de cliente
+INITIME = time.time()
 print ("Nueva conexion!")
 print (ADDR)
 
@@ -193,7 +195,8 @@ while (GAMESTATE == 0):             # Bienvenida al gato dummy
             GAMESTATE = 3
 
     while GAMESTATE == 3:       # Quieres jugar de nuevo?
-        AGAINSTR = WINNERSTR + AGAINSTR
+        ENDTIME = time.time()
+        AGAINSTR = WINNERSTR + "La partida ha durado " + str(ENDTIME-INITIME) + " segundos" + AGAINSTR
         CONN.send(str.encode(AGAINSTR))
         ng_data = int(CONN.recv(BUFFERSIZE).decode('UTF-8'))
 
